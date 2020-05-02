@@ -46,9 +46,9 @@ def season_selector(da, season):
         raise Exception('First month not Jan and/or last month not Dec!')
     
     # Check that all other months are there too
-    for _ in range(1,13):
-        if _ not in da_mnth.keys():
-            raise Exception(f'Month {_} not in data! We require all months.')
+    #for _ in range(1,13):
+    #    if _ not in da_mnth.keys():
+    #        raise Exception(f'Month {_} not in data!'+'We require all months.')
     
     season_dict = da.groupby('time.season').groups
 
