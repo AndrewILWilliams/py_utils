@@ -1,7 +1,16 @@
 import numpy as np
+import xarray as xr
 
 from scipy.stats import norm
 from scipy.stats.mstats import theilslopes
+
+def linear_trend(x, y):
+    pf=np.polyfit(x, y, 1)
+    return xr.DataArray(pf[0])
+
+def theilsen_regressor(x, y):
+    slope=theilslopes(y, x)[0] # x,y swapped (see docs)
+    return xr.DataArray(slope)
 
 def draw_bs_pairs_linreg(x, y, s, reg):
     """
