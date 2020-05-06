@@ -103,7 +103,8 @@ def load_landmask(model):
         raise Exception(f"Oops! Don't have landfrac information for {model}.")
         
     da = xr.open_mfdataset('/badc/cmip5/data/cmip5/output1/'
-                           +modelname_to_path[model]+'/*.nc')['sftlf']
+                           +modelname_to_path[model]+'/*.nc', 
+                           combine='by_coords')['sftlf']
     
     da = prune_coords(da)
     
