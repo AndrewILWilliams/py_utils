@@ -2,6 +2,28 @@ import numpy as np
 import glob
 import xarray as xr
 
+def aggr_latbands(da, dlat=None):
+    """
+    Function to aggregate data into latitude bands and take
+    either the mean across that band.
+    """
+    if dlat==None:
+        raise Exception("Seems like you forgot to specify the width "
+                        +"of the latitude band (`dlat`) to use!")
+        
+    if type(dlat)==float:
+        raise Exception("`dlat` needs to be an integer!")
+        
+    # Check dimensions are consistently named...
+    for dim in da.dims:
+        if dim=='latitude' or dim=='longitude':
+            da=da.rename({'longitude': 'lon','latitude': 'lat'})
+            
+    # Find approximate latitude spacing of native grid
+    native_dlat = np.mean(np.round(da.lat.diff("lat")).values)
+    
+    return da.coarsen(lat=int(dlat/native_dlat),boundary="trim").mean()
+
 def global_mean(ds):
     # calculate global avg temp, for example
     ds = unify_latlon(ds)
@@ -82,7 +104,9 @@ def load_landmask(model):
         
     da = xr.open_mfdataset('/badc/cmip5/data/cmip5/output1/'
                            +modelname_to_path[model]+'/*.nc')['sftlf']
-        
+    
+    da = prune_coords(da)
+    
     landmask = (da==1)
     
     return landmask
