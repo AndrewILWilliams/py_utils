@@ -8,4 +8,6 @@ pip install .
 TODO:
 Add regridding toolkit (just a wrapper around xESMF's regridding functionality) [ ]
 
-Add a wrapper around `xr.DataArray.coarsen()` for taking zonal means with different size lat bands [ ] 
+Add a wrapper around `xr.DataArray.coarsen()` for taking zonal means with different size lat bands [X]
+
+Add more functionality for extended djf, jja seasons...
