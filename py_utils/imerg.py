@@ -29,7 +29,7 @@ def load_imerg_data(years, var='precipitationCal'):
         half-hourly data for each year requested
     """
     try:
-        import muliprocessing as mp
+        import multiprocessing as mp
         import glob 
     except:
         raise Exception("This function requires"
