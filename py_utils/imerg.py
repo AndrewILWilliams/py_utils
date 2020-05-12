@@ -6,13 +6,13 @@ def barbados_subset(ds):
     return ds['precipitationCal'].sel(lat=slice(10, 15), lon=slice(-60, -55))
 
 def get_data(in_file, var):
-    """Load-and-chunk function for IMERG HDF files
-    Data is in HDF5 format, so need to specify 
-    'Grid' group for xarray to use. """
-    data = xr.open_dataset(in_file, engine='h5netcdf', group='Grid', chunks={'time':1, 'lon':100, 'lat': 100})
-    return data[var]
-
-def load_imerg_data(years, var='precipitationCal'):
+        """Load-and-chunk function for IMERG HDF files
+        Data is in HDF5 format, so need to specify 
+        'Grid' group for xarray to use. """
+        data = xr.open_dataset(in_file, engine='h5netcdf', group='Grid', chunks={'time':1, 'lon':100, 'lat': 100})
+        return data[var]
+    
+def load_imerg_data(years, var='precipitationCal', nproc=20):
     """ 
     Loading Matt C's IMERG satellite data from the 
     Earth Observation shared storage. *Lazy*
@@ -47,7 +47,7 @@ def load_imerg_data(years, var='precipitationCal'):
         
     # In parallel, lazily open each dataset, extract relevant field
     # and append to list
-    pool = mp.Pool(processes=20)
+    pool = mp.Pool(processes=nproc)
     p_list = []
     f_data = []
     
@@ -62,6 +62,7 @@ def load_imerg_data(years, var='precipitationCal'):
         f_data.append(t_res)
 
     # Finally, concatenate the many many dataarrays along time axis
+    print('Concatenating...')
     da = xr.concat(f_data, dim='time')
     return da
     
